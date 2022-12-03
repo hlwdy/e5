@@ -21,12 +21,7 @@ jobs:
 
       - name: Make a decision
         id: decision
-        run: |
-          m=$(date "+%-m")
-          d=$(date "+%-d")
-          h=$(date "+%-H")
-          [ $(((d + m + h) % 2)) = 1 ] && exit 0
-          echo "runnable=true" >> $GITHUB_OUTPUT
+        run: [ $((($(date "+%-m") + $(date "+%-d") + $(date "+%-H")) % 2)) = 0 ] && (echo "runnable=true" >> $GITHUB_OUTPUT)
 
       - name: Set up python
         if: steps.decision.outputs.runnable == 'true'
@@ -42,7 +37,7 @@ jobs:
       - name: Run Api
         if: steps.decision.outputs.runnable == 'true'
         env:
-          id: ${{ secrets.id }}
-          secret: ${{ secrets.secret }}
-          token: ${{ secrets.token }}
+          id: ${{ secrets.ID }}
+          secret: ${{ secrets.SECRET }}
+          token: ${{ secrets.TOKEN }}
         run: python e5.py
