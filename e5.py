@@ -21,7 +21,7 @@ class GracefulKiller:
         self.kill_now = True
 
 MIN_INVOKE_TIMES = 1
-MAX_INVOKE_TIMES = 3
+MAX_INVOKE_TIMES = 2
 EXECUTOR_POOL_SIZE = 7
 EXECUTOR_KILLER = GracefulKiller()
 
@@ -45,6 +45,7 @@ def invoke_api():
     app={'client_id':os.environ['id'],'client_secret':os.environ['secret'],'redirect_uri':'http://localhost:8080','refresh_token':os.environ['token']}
     tokens = get_access_token(app)
     #print(tokens)
+    print('token ok')
     access_token = tokens.get('access_token')
     refresh_token = tokens.get('refresh_token')
 
@@ -88,6 +89,7 @@ def invoke_api():
         for api in apis:
             try:
                 r=requests.get(api, headers=headers)
+                print(api+' | '+str(r.status_code))
                 if r.status_code == 200:
                     print( '{:>6s} | {:<50s}\n'.format(
                         f'周期: {period}',
