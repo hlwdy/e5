@@ -21,7 +21,8 @@ jobs:
 
       - name: Make a decision
         id: decision
-        run: [ $((($(date "+%-m") + $(date "+%-d") + $(date "+%-H")) % 2)) = 0 ] && (echo "runnable=true" >> $GITHUB_OUTPUT)
+        run: |
+          [ $((($(date "+%-m") + $(date "+%-d") + $(date "+%-H")) % 2)) = 0 ] && (echo "runnable=true" >> $GITHUB_OUTPUT)
 
       - name: Set up python
         if: steps.decision.outputs.runnable == 'true'
