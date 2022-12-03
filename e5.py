@@ -20,8 +20,8 @@ class GracefulKiller:
     def exit_gracefully(self, *args):
         self.kill_now = True
 
-MIN_INVOKE_TIMES = 1
-MAX_INVOKE_TIMES = 2
+MIN_INVOKE_TIMES = 2
+MAX_INVOKE_TIMES = 4
 EXECUTOR_POOL_SIZE = 7
 EXECUTOR_KILLER = GracefulKiller()
 
@@ -85,8 +85,9 @@ def invoke_api():
             return ''
 
         result = '=========================================================================================\n'
-        random.shuffle(apis)
-        for api in apis:
+        curapi=random.sample(apis,random.randint(4,8))
+        random.shuffle(curapi)
+        for api in curapi:
             try:
                 r=requests.get(api, headers=headers)
                 print(api+' | '+str(r.status_code))
