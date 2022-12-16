@@ -2,7 +2,7 @@ name: Invoke API
 
 on:
   schedule:
-    - cron: '3-46/37 6,7,8,10,12,14,16,17,20 * * *'
+    - cron: '3-46/37 2,3,6,7,8,10,12,14,16,17,20,23 * * *'
   # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#providing-inputs
   workflow_dispatch:
     inputs:
@@ -22,7 +22,7 @@ jobs:
       - name: Make a decision
         id: decision
         run: |
-          if [ $((($(date "+%-m") + $(date "+%-d") + $(date "+%-H")) % 3)) != 1 ];then (echo "runnable=true" >> $GITHUB_OUTPUT) fi
+          if [ $((($(date "+%-m") + $(date "+%-d") + $(date "+%-H") + $(date "+%-M")) % 3)) != 1 ];then (echo "runnable=true" >> $GITHUB_OUTPUT) fi
 
       - name: Set up python
         if: steps.decision.outputs.runnable == 'true'
