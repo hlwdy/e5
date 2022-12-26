@@ -41,4 +41,5 @@ jobs:
           id: ${{ secrets.ID }}
           secret: ${{ secrets.SECRET }}
           token: ${{ secrets.TOKEN }}
+          proxy: ${{ secrets.PROXY }}
         run: python e5.py

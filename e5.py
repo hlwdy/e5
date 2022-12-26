@@ -43,6 +43,7 @@ def get_access_token(app):
 
 def invoke_api():
     app={'client_id':os.environ['id'],'client_secret':os.environ['secret'],'redirect_uri':'http://localhost:8080','refresh_token':os.environ['token']}
+    proxy_=os.environ['proxy']
     tokens = get_access_token(app)
     #print(tokens)
     print('token ok')
@@ -89,7 +90,7 @@ def invoke_api():
         random.shuffle(curapi)
         for api in curapi:
             try:
-                r=requests.get(api, headers=headers)
+                r=requests.get(api.replace('graph.microsoft.com',_proxy), headers=headers)
                 print(api+' | '+str(r.status_code))
                 if r.status_code == 200:
                     print( '{:>6s} | {:<50s}\n'.format(
