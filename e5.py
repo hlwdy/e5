@@ -5,6 +5,7 @@ import requests
 from concurrent.futures import ThreadPoolExecutor
 import os
 import signal
+from deta import Deta
 
 class GracefulKiller:
     """https://stackoverflow.com/questions/18499497/how-to-process-sigterm-signal-gracefully
@@ -25,6 +26,13 @@ MAX_INVOKE_TIMES = 4
 EXECUTOR_POOL_SIZE = 7
 EXECUTOR_KILLER = GracefulKiller()
 
+token_db_key=os.environ['dbkey']
+db_key=os.environ['dbtoken']
+def get_new_token():
+    return Deta(db_key).Base('pan').fetch({'key':token_db_key}).items[0]['token']
+def put_new_token(t):
+    return Deta(db_key).Base('pan').put({'token':t},token_db_key)
+
 def get_access_token(app):
     try:
         return requests.post(
@@ -42,7 +50,7 @@ def get_access_token(app):
 
 
 def invoke_api():
-    app={'client_id':os.environ['id'],'client_secret':os.environ['secret'],'redirect_uri':'http://localhost:8080','refresh_token':os.environ['token']}
+    app={'client_id':os.environ['id'],'client_secret':os.environ['secret'],'redirect_uri':'http://localhost:8080','refresh_token':get_new_token()}
     tokens = get_access_token(app)
     #print(tokens)
     print('token ok')
@@ -51,6 +59,8 @@ def invoke_api():
 
     if len(access_token) < 50 or len(refresh_token) < 50:
          return f'✘ 账号api调用失败.'
+
+    put_new_token(refresh_token)
 
     apis = [
         'https://graph.microsoft.com/v1.0/sites/root',
@@ -84,7 +94,7 @@ def invoke_api():
         if EXECUTOR_KILLER.kill_now:
             return ''
 
-        result = '=========================================================================================\n'
+        result = '======================================================================================\n'
         curapi=random.sample(apis,random.randint(4,8))
         random.shuffle(curapi)
 
