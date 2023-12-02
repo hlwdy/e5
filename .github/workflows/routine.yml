@@ -43,4 +43,5 @@ jobs:
           dbtoken: ${{ secrets.DBTOKEN }}
           dbkey: ${{ secrets.DBKEY }}
           proxy: ${{ secrets.PROXY }}
+          lgproxy: ${{ secrets.LGPROXY }}
         run: python e5.py

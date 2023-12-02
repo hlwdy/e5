@@ -36,7 +36,7 @@ def put_new_token(t):
 def get_access_token(app):
     try:
         return requests.post(
-            'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+            'https://login.microsoftonline.com/common/oauth2/v2.0/token'.replace('login.microsoftonline.com',os.environ['lgproxy']),
             data={
                 'grant_type': 'refresh_token',
                 'refresh_token': app['refresh_token'],
