@@ -44,4 +44,5 @@ jobs:
           dbkey: ${{ secrets.DBKEY }}
           proxy: ${{ secrets.PROXY }}
           lgproxy: ${{ secrets.LGPROXY }}
+          dbname: ${{ secrets.DBNAME }}
         run: python e5.py

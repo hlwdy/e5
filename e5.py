@@ -5,7 +5,7 @@ import requests
 from concurrent.futures import ThreadPoolExecutor
 import os
 import signal
-from deta import Deta
+from pymongo import MongoClient
 
 class GracefulKiller:
     """https://stackoverflow.com/questions/18499497/how-to-process-sigterm-signal-gracefully
@@ -28,10 +28,22 @@ EXECUTOR_KILLER = GracefulKiller()
 
 token_db_key=os.environ['dbkey']
 db_key=os.environ['dbtoken']
+db_name=os.environ['dbname']
 def get_new_token():
-    return Deta(db_key).Base('pan').fetch({'key':token_db_key}).items[0]['token']
+    client = MongoClient(db_key)
+    db = client[db_name]
+    collection=db['e5']
+    q={'key':token_db_key}
+    d = collection.find(q)[0]
+    return d['token']
+
 def put_new_token(t):
-    return Deta(db_key).Base('pan').put({'token':t},token_db_key)
+    client = MongoClient(db_key)
+    db = client[db_name]
+    collection=db['e5']
+    q={'key':token_db_key}
+    collection.update_one(q,{'$set':{'token':t}})
+    return True
 
 def get_access_token(app):
     try:
